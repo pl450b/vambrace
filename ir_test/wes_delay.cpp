@@ -37,15 +37,17 @@ void edge_trigger(int gpio, int level, uint32_t tick)
 int main(int argc, char *argv[]) {
   int diff; //timestamp difference
   int tally; // number pulses since last reset
+  gpioData_t temp_read;
 
   gpioSetAlertFunc(READ_PIN, edge_trigger); // Register callback function from pigpio library to edges function
   
   while(1) {
     gpioDelay(100000);
 
-    gpioDelay_t temp_read = pulse_read; // make a temp copy so it can't change while we calc the pulse width
+    temp_read = pulse_read; // make a temp copy so it can't change while we calc the pulse width
+    
 
-    diff = temp_read.last_tick - g_data.first_tick;
+    diff = temp_read.last_tick - temp_read.first_tick;
     tally = temp_read.pulse_ct;
     if(diff == 0) diff = 1; // Prevent dividing by zero
 
