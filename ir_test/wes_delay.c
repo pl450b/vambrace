@@ -54,7 +54,7 @@ int main(int argc, char *argv[]) {
     if(diff == 0) diff = 1; // Prevent dividing by zero
 
     g_reset = 1; // record new pulse_read
-    printf("Pulse width: %f\n", 1000000 * tally / diff); // print pulse width by diving number of pulses by the time between two recordings
+    printf("Pulse width: %.0f\n", 1000000.0 * tally / diff); // print pulse width by diving number of pulses by the time between two recordings
   }
 
   gpioTerminate();
