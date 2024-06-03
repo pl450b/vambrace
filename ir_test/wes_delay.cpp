@@ -12,8 +12,8 @@ typedef struct {
   uint32_t pulse_ct;
 } gpioData_t;
 
-static volatile gpioData_t g_data;
-static volatile gpioData_t l_data;
+volatile gpioData_t g_data;
+volatile gpioData_t l_data;
 
 static volatile int g_reset;
 
@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
   int diff; //timestamp difference
   int tally; // number pulses since last reset
 
-  gpioSetAlertFuc(READ_PIN, edge_trigger) // Register callback function from pigpio library to edges function
+  gpioSetAlertFunc(READ_PIN, edge_trigger); // Register callback function from pigpio library to edges function
   
   while(1) {
     gpioDelay(100000);
