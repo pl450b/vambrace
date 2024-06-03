@@ -12,8 +12,7 @@ typedef struct {
   uint32_t pulse_ct;
 } gpioData_t;
 
-volatile gpioData_t g_data;
-volatile gpioData_t l_data;
+volatile gpioData_t pulse_read;
 
 static volatile int g_reset;
 
@@ -22,15 +21,15 @@ static volatile int g_reset;
 // tick = timestamp when the trigger happens
 void edge_trigger(int gpio, int level, uint32_t tick)
 {
-  l_data.last_tick = tick; // updates l_data with most recent timestamp
+  pulse_read.last_tick = tick; // updates pulse_read with most recent timestamp
  
-  if(level == 1) l_data.pulse_ct++; // if positive edge, increase pulse_ct
+  if(level == 1) pulse_read.pulse_ct++; // if positive edge, increase pulse_ct
   
   // If a global reset triggered (g_reset = 1), set tick data to current timestamp
   if (g_reset) {
-    l_data.first_tick = tick;
-    l_data.last_tick = tick;
-    l_data.pulse_ct = 0;
+    pulse_read.first_tick = tick;
+    pulse_read.last_tick = tick;
+    pulse_read.pulse_ct = 0;
     g_reset = 0;
   }
 }
@@ -44,13 +43,13 @@ int main(int argc, char *argv[]) {
   while(1) {
     gpioDelay(100000);
 
-    g_data = l_data;
+    gpioDelay_t temp_read = pulse_read; // make a temp copy so it can't change while we calc the pulse width
 
-    diff = g_data.last_tick - g_data.first_tick;
-    tally = g_data.pulse_ct;
+    diff = temp_read.last_tick - g_data.first_tick;
+    tally = temp_read.pulse_ct;
     if(diff == 0) diff = 1; // Prevent dividing by zero
 
-    g_reset = 1; // record new l_data
+    g_reset = 1; // record new pulse_read
     printf("Pulse width: %f\n", tally / diff); // print pulse width by diving number of pulses by the time between two recordings
   }
 
