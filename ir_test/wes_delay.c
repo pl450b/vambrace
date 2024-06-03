@@ -23,8 +23,9 @@ void edge_trigger(int gpio, int level, uint32_t tick)
 {
   pulse_read.last_tick = tick; // updates pulse_read with most recent timestamp
  
-  if(level == 1) pulse_read.pulse_ct++; // if positive edge, increase pulse_ct
-  
+  // if(level == 1) pulse_read.pulse_ct++; // if positive edge, increase pulse_ct
+  pulse_read.pulse_ct++;
+
   // If a global reset triggered (g_reset = 1), set tick data to current timestamp
   if (g_reset) {
     pulse_read.first_tick = tick;
