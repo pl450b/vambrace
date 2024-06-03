@@ -8,8 +8,8 @@
 
 typedef struct {
   uint32_t first_tick;
-  unit32_t last_tick;
-  unit32_t pulse_ct;
+  uint32_t last_tick;
+  uint32_t pulse_ct;
 } gpioData_t;
 
 static volatile gpioData_t g_data;
@@ -20,7 +20,7 @@ static volatile int g_reset;
 // gpio = pin number on raspberry pi to monitor
 // level = which edge function was triggered on (1 = positive, 0 = negative)
 // tick = timestamp when the trigger happens
-void edge_trigger(into gpio, int level, uint32_t tick)
+void edge_trigger(int gpio, int level, uint32_t tick)
 {
   l_data.last_tick = tick; // updates l_data with most recent timestamp
  
@@ -35,11 +35,11 @@ void edge_trigger(into gpio, int level, uint32_t tick)
   }
 }
 
-int main(argc char *argv[]) {
+int main(int argc, char *argv[]) {
   int diff; //timestamp difference
   int tally; // number pulses since last reset
 
-  gpioSetAlertFuc(READ_PIN, edges) // Register callback function from pigpio library to edges function
+  gpioSetAlertFuc(READ_PIN, edge_trigger) // Register callback function from pigpio library to edges function
   
   while(1) {
     gpioDelay(100000);
