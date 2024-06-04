@@ -69,7 +69,7 @@ int main(int argc, char *argv[]) {
 	
   const char *fifo = FIFO_PATH;
   mkfifo(fifo, 0666);
-  fifo_obj = open(fifo, O_WRONLY);
+  int fifo_obj = open(fifo, O_WRONLY);
 
   if (gpioInitialise() < 0) return -1;
 
