@@ -43,7 +43,9 @@ void edge_trigger(int gpio, int level, uint32_t tick)
 
 int read_frequency(void)
 {
-  temp_read = pulse_read; // make a temp copy so it can't change while we calc the pulse width
+  int diff; // timestamp difference
+  int tally; // pulse number since last read
+  gpioDelay temp_read = pulse_read; // make a temp copy so it can't change while we calc the pulse width
   
   diff = temp_read.last_tick - temp_read.first_tick;
   tally = temp_read.pulse_ct;
@@ -54,13 +56,9 @@ int read_frequency(void)
 }
 
 int main(int argc, char *argv[]) {
-  int diff; //timestamp difference
-  int tally; // number pulses since last reset
   int result;
-  int state = MONITOR;
+  int state = SLEEP;
   int awake_ct = 0;
-
-  gpioData_t temp_read;
 	
   if (gpioInitialise() < 0) return 1;
 
