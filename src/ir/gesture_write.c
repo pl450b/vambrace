@@ -5,6 +5,12 @@
 
 #define READ_PIN  13
 
+// States
+#define SLEEP   0
+#define AWAKE   1
+
+#define WAKE_THRESHOLD  150   // result value considered NULL
+#define SLEEP_THRESHOLD 50    // number of loops before system sleeps again
 
 typedef struct {
   uint32_t first_tick;
@@ -35,10 +41,25 @@ void edge_trigger(int gpio, int level, uint32_t tick)
   }
 }
 
+int read_frequency(void)
+{
+  temp_read = pulse_read; // make a temp copy so it can't change while we calc the pulse width
+  
+  diff = temp_read.last_tick - temp_read.first_tick;
+  tally = temp_read.pulse_ct;
+  if(diff == 0) diff = 1; // Prevent dividing by zero
+  
+  g_reset = 1; // record new pulse_read
+  return(1000000 * tally / diff);
+}
+
 int main(int argc, char *argv[]) {
   int diff; //timestamp difference
   int tally; // number pulses since last reset
   int result;
+  int state = MONITOR;
+  int awake_ct = 0;
+
   gpioData_t temp_read;
 	
   if (gpioInitialise() < 0) return 1;
@@ -47,17 +68,27 @@ int main(int argc, char *argv[]) {
   
   while(1) {
     gpioDelay(100000);
+    result = read_frequency();
+    case(state) 
+    {
+    SLEEP:
+         if(result < WAKE_THRESHOLD) state = AWAKE;
+         break;
+    AWAKE:
+         printf("Result: %i\n", result);
+         if(result < WAKE_THRESHOLD)
+            awake_ct = 0;
+         else 
+            awake_ct++;
 
-    temp_read = pulse_read; // make a temp copy so it can't change while we calc the pulse width
-    
-
-    diff = temp_read.last_tick - temp_read.first_tick;
-    tally = temp_read.pulse_ct;
-    if(diff == 0) diff = 1; // Prevent dividing by zero
-    
-    g_reset = 1; // record new pulse_read
-    result = 1000000 * tally / diff;
-    printf("Pulse width: %i\n", result); // print pulse width by diving number of pulses by the time between two recordings
+         if(awake_ct >= SLEEP_THRESHOLD) {
+            state = SLEEP;
+            awake_ct = 0;           
+          }
+          break;
+    default:
+         state = SLEEP;
+    }
   }
 
   gpioTerminate();
