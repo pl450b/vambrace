@@ -1,5 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 #include <pigpio.h>
 
@@ -11,6 +16,8 @@
 
 #define WAKE_THRESHOLD  150   // result value considered NULL
 #define SLEEP_THRESHOLD 50    // number of loops before system sleeps again
+
+#define FIFO_PATH "/tmp/gesture_fifo"
 
 typedef struct {
   uint32_t first_tick;
@@ -60,7 +67,11 @@ int main(int argc, char *argv[]) {
   int state = SLEEP;
   int awake_ct = 0;
 	
-  if (gpioInitialise() < 0) return 1;
+  const char *fifo = FIFO_PATH;
+  mkfifo(fifo, 0666);
+  fifo_obj = open(fifo, O_WRONLY);
+
+  if (gpioInitialise() < 0) return -1;
 
   gpioSetAlertFunc(READ_PIN, edge_trigger); // Register callback function from pigpio library to edges function
   
@@ -74,6 +85,9 @@ int main(int argc, char *argv[]) {
          break;
     case AWAKE:
          printf("Result: %i\n", result);
+         char str[4];
+         sprintf(str, "%d", result)
+         write(fifo_obj, str, 4); // WRONG, need to conver result to char* 
          if(result < WAKE_THRESHOLD)
             awake_ct = 0;
          else 
@@ -81,7 +95,9 @@ int main(int argc, char *argv[]) {
 
          if(awake_ct >= SLEEP_THRESHOLD) {
             state = SLEEP;
-            awake_ct = 0;           
+            awake_ct = 0; 
+            printf("SLEEP\n");
+            write(fifo_obj, "SLEEP", 6);
           }
           break;
     default:
