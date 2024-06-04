@@ -38,6 +38,7 @@ void edge_trigger(int gpio, int level, uint32_t tick)
 int main(int argc, char *argv[]) {
   int diff; //timestamp difference
   int tally; // number pulses since last reset
+  int result;
   gpioData_t temp_read;
 	
   if (gpioInitialise() < 0) return 1;
@@ -53,9 +54,10 @@ int main(int argc, char *argv[]) {
     diff = temp_read.last_tick - temp_read.first_tick;
     tally = temp_read.pulse_ct;
     if(diff == 0) diff = 1; // Prevent dividing by zero
-
+    
     g_reset = 1; // record new pulse_read
-    printf("Pulse width: %.0f\n", 1000000.0 * tally / diff); // print pulse width by diving number of pulses by the time between two recordings
+    result = 1000000 * tally / diff;
+    printf("Pulse width: %i\n", result); // print pulse width by diving number of pulses by the time between two recordings
   }
 
   gpioTerminate();
