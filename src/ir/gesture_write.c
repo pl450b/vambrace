@@ -45,7 +45,7 @@ int read_frequency(void)
 {
   int diff; // timestamp difference
   int tally; // pulse number since last read
-  gpioDelay temp_read = pulse_read; // make a temp copy so it can't change while we calc the pulse width
+  gpioData_t temp_read = pulse_read; // make a temp copy so it can't change while we calc the pulse width
   
   diff = temp_read.last_tick - temp_read.first_tick;
   tally = temp_read.pulse_ct;
@@ -67,12 +67,12 @@ int main(int argc, char *argv[]) {
   while(1) {
     gpioDelay(100000);
     result = read_frequency();
-    case(state) 
+    switch(state) 
     {
-    SLEEP:
+    case SLEEP:
          if(result < WAKE_THRESHOLD) state = AWAKE;
          break;
-    AWAKE:
+    case AWAKE:
          printf("Result: %i\n", result);
          if(result < WAKE_THRESHOLD)
             awake_ct = 0;
