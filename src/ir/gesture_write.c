@@ -86,8 +86,8 @@ int main(int argc, char *argv[]) {
     case AWAKE:
          printf("Result: %i\n", result);
          char str[4];
-         sprintf(str, "%d", result);
-         write(fifo_obj, str, 4); // WRONG, need to conver result to char* 
+         sprintf(str, "%d\n", result);
+         write(fifo_obj, str, 5); // WRONG, need to conver result to char* 
          if(result < WAKE_THRESHOLD)
             awake_ct = 0;
          else 
@@ -97,7 +97,7 @@ int main(int argc, char *argv[]) {
             state = SLEEP;
             awake_ct = 0; 
             printf("SLEEP\n");
-            write(fifo_obj, "SLEEP", 6);
+            write(fifo_obj, "SLEEP\n", 7);
           }
           break;
     default:
