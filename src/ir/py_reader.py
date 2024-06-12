@@ -4,7 +4,7 @@ import time
 fifo_path = "/tmp/gesture_fifo"
 
 def read_fifo():
-    with open(fifo, 'r') as file:
+    with open(fifo_path, 'r') as file:
         ir_data = file.read().strip()
     return ir_data
 

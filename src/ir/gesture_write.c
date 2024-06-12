@@ -62,19 +62,47 @@ int read_frequency(void)
   return(1000000 * tally / diff);
 }
 
+void print_lines(int number) {
+  printf("Result: ");
+  int dash_ct = number / 2;
+  for(int i = 0; i < dash_ct; i++) {
+    printf("-");
+  }
+  printf("\n");
+}
+
+// Open the given FIFo, print result into it, then close the FIFO
+void print_to_fifo(const char* fifo, int input) {
+  char num_str[4];
+  sprintf(num_str, "%i", input);
+  int fifo_num = open(fifo, O_WRONLY);
+  write(fifo_num, num_str, 4);
+  close(fifo_num);
+}
+
+
 int main(int argc, char *argv[]) {
   int result;
   int state = SLEEP;
   int awake_ct = 0;
-	
+  
+  printf("Test\n");
+
   const char *fifo = FIFO_PATH;
   mkfifo(fifo, 0666);
-  int fifo_obj = open(fifo, O_WRONLY);
+  
+  printf("[INFO] FIFO established\n");
 
-  if (gpioInitialise() < 0) return -1;
+  if (gpioInitialise() < 0) {
+    printf("[ERROR] GPIO setup failure\n");
+    return -1;
+  }
+
+  printf("[INFO] GPIO setup success\n");
 
   gpioSetAlertFunc(READ_PIN, edge_trigger); // Register callback function from pigpio library to edges function
   
+  printf("[INFO] Starting read loop\n");
   while(1) {
     gpioDelay(100000);
     result = read_frequency();
@@ -84,10 +112,9 @@ int main(int argc, char *argv[]) {
          if(result < WAKE_THRESHOLD) state = AWAKE;
          break;
     case AWAKE:
-         printf("Result: %i\n", result);
-         char str[4];
-         sprintf(str, "%d\n", result);
-         write(fifo_obj, str, 5); // WRONG, need to conver result to char* 
+         print_lines(result); 
+         print_to_fifo(fifo, result);
+
          if(result < WAKE_THRESHOLD)
             awake_ct = 0;
          else 
@@ -97,7 +124,7 @@ int main(int argc, char *argv[]) {
             state = SLEEP;
             awake_ct = 0; 
             printf("SLEEP\n");
-            write(fifo_obj, "SLEEP\n", 7);
+            print_to_fifo(fifo, 999);
           }
           break;
     default:
