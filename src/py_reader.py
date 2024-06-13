@@ -5,6 +5,7 @@ from luma.oled.device import ssd1306, ssd1325, ssd1331, sh1106
 import time
 
 fifo_path = "/tmp/gesture_fifo"
+entry_list = []
 
 serial = i2c(port=1, address=0x3C)
 device = ssd1306(serial, rotate=0)
@@ -14,18 +15,18 @@ def read_fifo():
         ir_data = file.read().strip()
     return ir_data
 
+def new_line(text, entries):
+    entries.append(text)
+    recent_entries = entries[-4:]
+    for i in recent_entries:
+        with canvas(device) as draw:
+            draw.text((1,54), i, fill="white")
+        time.sleep(1)
+
 if __name__ == "__main__":
+    new_line("test 1", entry_list)
+    new_line("Test_2", entry_list)
+    new_line("testtttt 3", entry_list)
+    new_line("test  test  4", entry_list);
 
-    # while True:
-    #     with canvas(device) as draw:
-    #         ir_data = read_fifo()
-    #         ir_data = ir_data.split('\x00')[0]
-    #         x_index = int(int(ir_data)/1.7)
-    #         draw.rectangle((1, 1, x_index, 62), outline="white", fill="black")
-    #         print(int(ir_data))
-    draw = canvas(device) as draw:
-    for i in range(4):
-        draw.text((50, 50), 'Test from Wes!', fill="white")
-        time.sleep(5)
-
-    
+          
