@@ -23,7 +23,9 @@ if __name__ == "__main__":
     #         x_index = int(int(ir_data)/1.7)
     #         draw.rectangle((1, 1, x_index, 62), outline="white", fill="black")
     #         print(int(ir_data))
-    with canvas(device) as draw:
-        for i in range(4):
-            draw.text((50, 50), 'Test from Wes!', fill="white")
-            time.sleep(5)
+    draw = canvas(device) as draw:
+    for i in range(4):
+        draw.text((50, 50), 'Test from Wes!', fill="white")
+        time.sleep(5)
+
+    
