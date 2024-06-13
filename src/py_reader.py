@@ -16,10 +16,13 @@ def read_fifo():
 
 if __name__ == "__main__":
 
-    while True:
-        with canvas(device) as draw:
-            ir_data = read_fifo()
-            ir_data = ir_data.split('\x00')[0]
-            x_index = int(int(ir_data)/1.7)
-            draw.rectangle((1, 1, x_index, 62), outline="white", fill="black")
-            print(int(ir_data))
+    # while True:
+    #     with canvas(device) as draw:
+    #         ir_data = read_fifo()
+    #         ir_data = ir_data.split('\x00')[0]
+    #         x_index = int(int(ir_data)/1.7)
+    #         draw.rectangle((1, 1, x_index, 62), outline="white", fill="black")
+    #         print(int(ir_data))
+
+    for i in range(4):
+        draw.text((10, 10*i), 'Test from Wes!', fill="white")
