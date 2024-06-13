@@ -25,4 +25,5 @@ if __name__ == "__main__":
     #         print(int(ir_data))
     with canvas(device) as draw:
         for i in range(4):
-            draw.text((10, 10*i), 'Test from Wes!', fill="white")
+            draw.text((50, 50), 'Test from Wes!', fill="white")
+            time.sleep(5)
