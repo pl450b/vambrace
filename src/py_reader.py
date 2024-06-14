@@ -18,10 +18,11 @@ def read_fifo():
 def new_line(text, entries):
     entries.append(text)
     recent_entries = entries[-4:]
-    for i in recent_entries:
+    for i in range(4):
+        current_line = recent_entries[i]
         with canvas(device) as draw:
-            draw.text((1,54), i, fill="white")
-        time.sleep(1)
+            draw.text((1,64-i*10), current_line, fill="white")
+    time.sleep(1)
 
 if __name__ == "__main__":
     new_line("test 1", entry_list)
