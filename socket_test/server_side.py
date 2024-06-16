@@ -1,9 +1,11 @@
 import socket
 import time
 
-connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+# Setup connection parameters (ip/port pair, packet format)
+connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  
+# Bind to any ip address on port 5000
 connection.bind(('', 5000))
-connection.listen(5)
+connection.listen(5) # allows server to accept connections (only 5 failed attempts allowed)
 print("Server Running....")
 
 def send_data(message):
