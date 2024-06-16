@@ -1,7 +1,7 @@
 import socket
 import time
 
-connection = socket.socket(socket.AF_INET, socket_SOCK_STREAM)
+connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 connection.bind(('', 5000))
 connection.listen(5)
 print("Server Running....")
@@ -13,5 +13,7 @@ def send_data(message):
 if __name__ == "__main__":
     clientsocket, address = connection.accept()
     print(f"New connection from {address}, socket = {clientsocket}")
-
-    send_data("Success!!!")
+    
+    while True:
+        send_data("Success!!!")
+        time.sleep(2);
