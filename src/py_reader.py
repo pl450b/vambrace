@@ -8,7 +8,7 @@ import time
 fifo_path = "/tmp/gesture_fifo"
 entry_list = ["", "", "", "", "", "", "", ""]
 
-line_map = [0, 10, 20, 30, 40, 50, 60]
+line_map = [10, 20, 30, 40, 50, 60, 70]
 
 serial = i2c(port=1, address=0x3C)
 device = ssd1306(serial, rotate=0)
@@ -27,7 +27,13 @@ def new_line(text, entries):
             draw.text((0, line_map[i]), recent_entries[6-i], fill="white")
     time.sleep(1)
 
+def draw_label(text):
+    with canvas(device) as draw:
+        draw.rectangle((0,0, 127, 9) outline="white", fill="white")
+        draw.text((0, 0), text, fill="black")
+
 if __name__ == "__main__":
+    draw_label("SYSTEM")
     new_line("test 1", entry_list)
     new_line("test 2", entry_list)
     new_line("test 3", entry_list)
