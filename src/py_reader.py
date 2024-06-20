@@ -24,24 +24,27 @@ def new_line(text, entries):
     recent_entries = entries[-7:]
     
     with canvas(device) as draw:
+        draw.rectangle((0, 0, 127, 10), outline="white", fill="white")
+        draw.text((0, 0), "SYSTEM", fill="black")
         for i in range(7):
             draw.text((0, line_map[i]), recent_entries[6-i], fill="white")
-    time.sleep(1)
-
-def draw_label(text):
-    with canvas(device) as draw:
-        draw.rectangle((0,0, 127, 9) outline="white", fill="white")
-        draw.text((0, 0), text, fill="black")
 
 if __name__ == "__main__":
-    draw_label("SYSTEM")
     new_line("test 1", entry_list)
+    time.sleep(1)
     new_line("test 2", entry_list)
+    time.sleep(1)
     new_line("test 3", entry_list)
+    time.sleep(1)
     new_line("test 4", entry_list)
+    time.sleep(1)
     new_line("test 5", entry_list)
     new_line("test 66666", entry_list)
+    time.sleep(1)
+    new_line("test 555555", entry_list)
+    time.sleep(1)
     new_line("test 7", entry_list)
+    time.sleep(1)
     new_line("test 8", entry_list)
 
     while True:

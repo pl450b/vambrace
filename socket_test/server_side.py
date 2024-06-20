@@ -8,14 +8,10 @@ connection.bind(('', 5000))
 connection.listen(5) # allows server to accept connections (only 5 failed attempts allowed)
 print("Server Running....")
 
-def send_data(message):
-    print(f"Sending {message}")
-    clientsocket.send(bytes(message, "utf-8"))
+# make an actuall connection 
+clientsocket, address = connection.accept()
+print(f"New connection from {address}, socket = {clientsocket}")
 
-if __name__ == "__main__":
-    clientsocket, address = connection.accept()
-    print(f"New connection from {address}, socket = {clientsocket}")
-    
-    while True:
-        send_data("Success!!!")
-        time.sleep(2);
+while True:
+    clientsocket.send(bytes("This is a test from thhtht Wes", "utf-8")) # send message
+    time.sleep(2);
