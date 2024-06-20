@@ -4,6 +4,7 @@ from luma.oled.device import ssd1306, ssd1325, ssd1331, sh1106
 from collections import deque
 
 import time
+import threading
 
 fifo_path = "/tmp/gesture_fifo"
 entry_list = ["", "", "", "", "", "", "", ""]
@@ -39,8 +40,9 @@ if __name__ == "__main__":
     new_line("test 3", entry_list)
     new_line("test 4", entry_list)
     new_line("test 5", entry_list)
-    new_line("test 555555", entry_list)
+    new_line("test 66666", entry_list)
     new_line("test 7", entry_list)
     new_line("test 8", entry_list)
 
-    time.sleep(10)
+    while True:
+        print(read_fifo)
