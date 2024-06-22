@@ -20,7 +20,7 @@ class WristScreen:
 
     def new_line(self, header, text):
         self.entries.append(text)
-        recent_entries = self.entries[-self.num_lines:]
+        recent_entries = self.entries[-1:self.num_lines:-1]
         
         with canvas(self.device) as draw:
             # Draw header
