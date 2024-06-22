@@ -7,7 +7,7 @@ import time
 class OledTerminal:
     # Class variables
     serial = i2c(port=1, address=0x3C)
-    device = ssd1306(self.serial, rotate=0)
+    device = ssd1306(serial, rotate=0)
     
     def __init__(self, num_lines=7, line_height=10):
         # Setup of object variables
@@ -34,9 +34,11 @@ class OledTerminal:
                 draw.text((0, self.line_map[i]), recent_entries[self.num_lines-i-1], fill="white")
 
 if __name__ == "__main__":
-
     term1 = OledTerminal()
     count = 0
+
+    term1.set_header("SYSTEM")
+    time.sleep(2)
     while True:
         term1.new_line(f"test {count}")
         count += 1
