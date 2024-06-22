@@ -28,5 +28,5 @@ if __name__ == "__main__":
     while True:
         term1.new_line(f"test {count}")
         count += 1
-        time.sleep(1)
+        time.sleep(0.2)
 
