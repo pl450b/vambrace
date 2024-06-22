@@ -13,12 +13,7 @@ class OledTerminal:
         # Setup of object variables
         self.num_lines = num_lines
         self.entries = [""] * self.num_lines
-        self.line_height = line_height
-        # Define cordinates of each line
-        self.line_map = []
-        for i in range(num_lines):
-            self.line_map.append((i+1)*line_height)
-        
+        self.line_height = line_height     
 
     def set_header(self, text):
         with canvas(self.device) as draw:
@@ -30,8 +25,8 @@ class OledTerminal:
         recent_entries = self.entries[-self.num_lines:]
         
         with canvas(self.device) as draw:
-            for i in range(self.num_lines):
-                draw.text((0, self.line_map[i]), recent_entries[self.num_lines-i-1], fill="white")
+            for i, line in enumerate(recent_entries):
+                draw.text((0, self.line_height*(i+1)), line, fill="white")
 
 if __name__ == "__main__":
     term1 = OledTerminal()
@@ -42,5 +37,7 @@ if __name__ == "__main__":
     while True:
         term1.new_line(f"test {count}")
         count += 1
+        time.sleep(0.2)
+        term1.set_header("TESTER")
         time.sleep(0.2)
 
