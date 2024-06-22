@@ -1,6 +1,12 @@
-from luma.core.interface.serial import i2c
-from luma.core.render import canvas
-from luma.oled.device import ssd1306, ssd1325, ssd1331, sh1106
-from collections import deque
+from .wrist_screen import WristScreen
+
+if __name__ == "__main__":
+    screen1 = WristScreen()
+    count = 0
+
+    while True:
+        screen1.new_line("TESTER", f"test {count}")
+        count += 1
+        time.sleep(0.2)
 
 
