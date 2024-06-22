@@ -1,4 +1,5 @@
 from .wrist_screen import WristScreen
+import time
 
 if __name__ == "__main__":
     screen1 = WristScreen()
