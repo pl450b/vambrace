@@ -5,21 +5,33 @@ from luma.oled.device import ssd1306
 import time
 
 class OledTerminal:
-    def __init__(self):
-        self.entries = ["", "", "", "", "", "", "", ""]
-        self.line_map = [10, 20, 30, 40, 50, 60, 70]
-        self.serial = i2c(port=1, address=0x3C)
-        self.device = ssd1306(self.serial, rotate=0)
+    # Class variables
+    serial = i2c(port=1, address=0x3C)
+    device = ssd1306(self.serial, rotate=0)
+    
+    def __init__(self, num_lines=7, line_height=10):
+        # Setup of object variables
+        self.num_lines = num_lines
+        self.entries = [""] * self.num_lines
+        self.line_height = line_height
+        # Define cordinates of each line
+        self.line_map = []
+        for i in range(num_lines):
+            self.line_map.append((i+1)*line_height)
+        
+
+    def set_header(self, text):
+        with canvas(self.device) as draw:
+            draw.rectangle((0, 0, 127, self.line_height), outline="white", fill="white")
+            draw.text((0, 0), text, fill="black")
 
     def new_line(self, text):
         self.entries.append(text)
-        recent_entries = self.entries[-7:]
+        recent_entries = self.entries[-self.num_lines:]
         
         with canvas(self.device) as draw:
-            draw.rectangle((0, 0, 127, 10), outline="white", fill="white")
-            draw.text((0, 0), "SYSTEM", fill="black")
-            for i in range(7):
-                draw.text((0, self.line_map[i]), recent_entries[6-i], fill="white")
+            for i in range(self.num_lines):
+                draw.text((0, self.line_map[i]), recent_entries[self.num_lines-i-1], fill="white")
 
 if __name__ == "__main__":
 
