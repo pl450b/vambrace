@@ -1,12 +1,16 @@
 fifo_path = "/tmp/gesture_fifo"
 
 while True:
-    data = open(fifo_path, 'r')
-    if(data):
-        print("yes data")
-    else:
-        print("no data")
-    data.close()
+    try:
+        data = open(fifo_path, 'r')
+        if(data):
+            print("yes data")
+        else:
+            print("no data")
+    except:
+        print("really no data")
+    finally:
+        data.close()
 
 
         # ir_data = data.read().strip()
